@@ -9,18 +9,12 @@ const platesPerSide = (plates, weight) => {
   const count = calcPlates(weight, plateWeight)
   const totals = {[plateWeight.toString()]: count}
   const remaingPlates = plates.slice(1)
-  const remainingWeight =   weight - (count * plateWeight)
+  const remainingWeight = weight - (count * plateWeight)
 
   return Object.assign({}, platesPerSide(remaingPlates, remainingWeight), totals)
 }
 
-const calcPlates = (weight, plateWeight) =>
-{
-  const count = weight / plateWeight
-  const remainder = weight % plateWeight
-
-  return Math.floor(count)
-}
+const calcPlates = (weight, plateWeight) => Math.floor(weight / plateWeight)
 
 console.log(`\n\nPlates per side for ${totalWeight}lbs with a bar that weights ${barWeight}lbs:\n`)
 const totals = platesPerSide(plates, (totalWeight - barWeight) / 2)
