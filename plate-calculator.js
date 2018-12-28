@@ -1,21 +1,28 @@
-const barWeight = process.env.bar || 45
-const totalWeight = process.env.weight || 255
-const plates = [45, 35, 25, 10, 5, 2.5, 1.25, 1, .5]
-
-const platesPerSide = (plates, weight) => {
-  if (plates.length === 0) return {}
-
-  const plateWeight = plates[0]
-  const count = calcPlates(weight, plateWeight)
-  const totals = {[plateWeight.toString()]: count}
-  const remaingPlates = plates.slice(1)
-  const remainingWeight = weight - (count * plateWeight)
-
-  return Object.assign({}, platesPerSide(remaingPlates, remainingWeight), totals)
+const reverse = function(x, y) {
+	return y - x
 }
 
-const calcPlates = (weight, plateWeight) => Math.floor(weight / plateWeight)
+const calculator = function(plates, weight) {
+	if (plates.length === 0) return {}
 
-console.log(`\n\nPlates per side for ${totalWeight}lbs with a bar that weights ${barWeight}lbs:\n`)
-const totals = platesPerSide(plates, (totalWeight - barWeight) / 2)
-Object.keys(totals).forEach(key => console.log(`${key}: ${totals[key]} plates per side`))
+	// always make sure the plates are sorted so we don't add on nine 5's in stead of a single 45
+	const sortedPlates = plates.sort(reverse)
+	// grab the heaviest plate
+	const plateWeight = sortedPlates[0]
+	// how many of the heaviest plate can we use
+	const count = Math.floor(weight / plateWeight)
+	const totals = { [plateWeight.toString()]: count }
+	// slice off the plate we just used for *this* calulation
+	// as we don't want to calculate against it in the next iteration
+	const remaingPlates = sortedPlates.slice(1)
+	const remainingWeight = weight - count * plateWeight
+
+	// recurse the remaining weight and plates
+	return Object.assign({}, calculator(remaingPlates, remainingWeight), totals)
+}
+
+const platesPerSideCalculator = function(plates, weight, barWeight = 45) {
+	return calculator(plates, (weight - barWeight) / 2)
+}
+
+export default platesPerSideCalculator
