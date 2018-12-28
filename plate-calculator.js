@@ -3,7 +3,7 @@ const reverse = function(x, y) {
 }
 
 const calculator = function(plates, weight) {
-	if (plates.length === 0) return {}
+	if (plates.length === 0 || weight < 0) return {}
 
 	// always make sure the plates are sorted so we don't add on nine 5's in stead of a single 45
 	const sortedPlates = plates.sort(reverse)
